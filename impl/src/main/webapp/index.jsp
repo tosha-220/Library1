@@ -2,12 +2,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Proselyte</title>
+    <title>Library</title>
 </head>
 <body>
-<h3>Proselyte presents</h3>
+<h3>Library</h3>
 <br/>
-<a href="<c:url value="/books"/>" target="_blank">Books list</a>
+<a href="<c:url value="/books"/>">Books list</a>
 <br/>
 </body>
 </html>

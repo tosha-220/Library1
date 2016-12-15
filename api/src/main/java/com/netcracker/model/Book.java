@@ -1,4 +1,4 @@
-package com.netcraker.model;
+package com.netcracker.model;
 
 import javax.persistence.*;
 
@@ -20,6 +20,12 @@ public class Book {
 
     @Column(name = "link")
     private String link;
+
+    @Column(name = "hash")
+    private int hash;
+
+    @Column(name = "mimeType")
+    private String mimeType;
 
     public int getBookID() {
         return bookID;
@@ -61,6 +67,22 @@ public class Book {
         this.link = link;
     }
 
+    public int getHash() {
+        return hash;
+    }
+
+    public void setHash(int hash) {
+        this.hash = hash;
+    }
+
+    public String getMimeType() {
+        return mimeType;
+    }
+
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
+    }
+
     @Override
     public String toString() {
         return "Book{" +
@@ -69,6 +91,8 @@ public class Book {
                 ", author='" + author + '\'' +
                 ", year=" + year +
                 ", link='" + link + '\'' +
+                ", hash=" + hash +
+                ", mimeType='" + mimeType + '\'' +
                 '}';
     }
 }

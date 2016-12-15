@@ -1,11 +1,10 @@
-package com.netcraker.dao;
+package com.netcracker.service;
 
-
-import com.netcraker.model.Book;
+import com.netcracker.model.Book;
 
 import java.util.List;
 
-public interface BookDao {
+public interface BookService {
     void addBook(Book book);
 
     void updateBook(Book book);
@@ -17,4 +16,6 @@ public interface BookDao {
     List<Book> listBooks();
 
     List<Book> getBookByName(String name);
+
+    Book getBookByHash(int hash);
 }

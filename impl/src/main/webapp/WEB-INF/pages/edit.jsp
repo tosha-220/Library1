@@ -7,27 +7,19 @@
 <title>Books Page</title>
 
 
+<h1>Edit a Book</h1>
 
-<h1>Add a Book</h1>
 
-<c:url var="addAction" value="/books/add"/>
+<c:url var="edit" value="/update"/>
 
-<form:form action="${addAction}" commandName="book">
+<form:form action="${edit}" commandName="book">
     <table>
-        <c:if test="${!empty book.bookTitle}">
-            <tr>
-                <td>
-                    <form:label path="bookID">
-                        <spring:message text="ID"/>
-                    </form:label>
-                </td>
-                <td>
-                    <form:input path="bookID" readonly="true" size="8" disabled="true"/>
-                    <form:hidden path="bookID"/>
-                        <%--&lt;%&ndash;строчка выше убирает дублирование при редактировании-%>--%>
-                </td>
-            </tr>
-        </c:if>
+        <tr>
+            <td>
+                <form:hidden path="bookID"/>
+            </td>
+        </tr>
+
         <tr>
             <td>
                 <form:label path="bookTitle">
@@ -60,24 +52,25 @@
         </tr>
         <tr>
             <td>
-                <form:label path="link">
-                    <spring:message text="link"/>
-                </form:label>
-            </td>
-            <td>
-                <form:input path="link"/>
+                <form:hidden path="link"/>
             </td>
         </tr>
         <tr>
-            <td colspan="2">
-                <c:if test="${!empty book.bookTitle}">
-                    <input type="submit"
-                           value="<spring:message text="Edit Book"/>"/>
-                </c:if>
-                <c:if test="${empty book.bookTitle}">
-                    <input type="submit"
-                           value="<spring:message text="Add Book"/>"/>
-                </c:if>
+            <td>
+
+                <form:hidden path="mimeType"/>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <form:hidden path="hash"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="submit"
+                       value="<spring:message text="Edit Book"/>"/>
             </td>
         </tr>
     </table>

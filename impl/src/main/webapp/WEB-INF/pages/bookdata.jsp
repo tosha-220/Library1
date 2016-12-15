@@ -48,9 +48,9 @@
 
 </head>
 <body>
-<h1>Book Details</h1>
+<h1 align="center">Book Details</h1>
 
-<table class="tg">
+<table class="tg" align="center">
     <tr>
         <th width="80">ID</th>
         <th width="120">Title</th>
@@ -60,11 +60,11 @@
 
     </tr>
     <tr>
-        <td align="center" >${book.bookID}</td>
-        <td align="center" >${book.bookTitle}</td>
-        <td align="center" >${book.author}</td>
-        <td align="center" >${book.year}</td>
-        <td align="center" >${book.link}</td>
+        <td align="center">${book.bookID}</td>
+        <td align="center">${book.bookTitle}</td>
+        <td align="center">${book.author}</td>
+        <td align="center">${book.year}</td>
+        <td align="center"><a href="<c:url value='/download/${book.hash}'/>">Download</a></td>
 
     </tr>
 </table>

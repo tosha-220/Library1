@@ -1,6 +1,6 @@
-package com.netcraker.dao;
+package com.netcracker.dao;
 
-import com.netcraker.model.Book;
+import com.netcracker.model.Book;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
@@ -51,6 +51,14 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
+    public Book getBookByHash(int hash) {
+        Session session = this.sessionFactory.getCurrentSession();
+        List<Book> bookList = session.createQuery("from Book book where book.hash=:hash").setInteger("hash", hash).list();
+        logger.info("Book list: " + bookList.get(0));
+        return bookList.get(0);
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public List<Book> listBooks() {
         Session session = sessionFactory.getCurrentSession();
@@ -62,9 +70,9 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
-    public List<Book> getBookByName(String name) {
+    public List<Book> getBookByTitle(String title) {
         Session session = sessionFactory.getCurrentSession();
-        List<Book> list = session.createQuery("from Book book where book.bookTitle = :name").setString("name",name).list();
+        List<Book> list = session.createQuery("from Book book where book.bookTitle = :name").setString("name", title).list();
         for (Book book : list) {
             logger.info("Book list: " + book);
         }

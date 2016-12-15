@@ -48,23 +48,21 @@
 </head>
 <body>
 <a href="../../index.jsp">Back to main menu</a>
-
-
 <br/>
 <br/>
-<h1>
-    Search
-</h1>
-<form action="/search" method="get">
-    <input type="text" name="bookName"target="_blank" value="Enter book name">
-    <input type="submit" value="Find">
-</form>
-<a href="<c:url value="/add"/>" target="_blank">Add book</a>
-
-<h1>Book List</h1>
+<p></p>
+<label>
+    Search book
+    <form action="/search" method="get">
+        <input type="text" name="bookTitle" placeholder="Enter book name">
+        <input type="submit" value="Find">
+    </form>
+</label>
+<a href="<c:url value="/add"/>" target="_parent">Add new book</a>
 
 <c:if test="${!empty listBooks}">
-    <table class="tg">
+    <h1 align="center">Books List</h1>
+    <table class="tg" align="center">
         <tr>
             <th width="80">ID</th>
             <th width="120">Title</th>
@@ -77,17 +75,19 @@
         </tr>
         <c:forEach items="${listBooks}" var="book">
             <tr>
-                <td align="center" >${book.bookID}</td>
-                <td align="center" ><a href="/bookdata/${book.bookID}" target="_blank">${book.bookTitle}</a></td>
-                <td align="center" >${book.author}</td>
-                <td align="center" >${book.year}</td>
-                <td align="center" ><p><a href="${book.link}">${book.link}</a></p></td>
-                <td align="center" ><a href="<c:url value='/edit/${book.bookID}'/>">Edit</a></td>
-                <td align="center" ><a href="<c:url value='/remove/${book.bookID}'/>">Delete</a></td>
+                <td align="center">${book.bookID}</td>
+                <td align="center"><a href="/bookdata/${book.bookID}">${book.bookTitle}</a></td>
+                <td align="center">${book.author}</td>
+                <td align="center">${book.year}</td>
+                <td align="center"><a href="<c:url value='/download/${book.hash}'/>">Download</a></td>
+                <td align="center"><a href="<c:url value='/edit/${book.bookID}'/>">Edit</a></td>
+                <td align="center"><a href="<c:url value='/remove/${book.bookID}'/>">Delete</a></td>
             </tr>
         </c:forEach>
     </table>
 </c:if>
-
+<c:if test="${empty listBooks}">
+    <h1 align="center">No books in library. Please add.</h1>
+</c:if>
 </body>
 </html>
