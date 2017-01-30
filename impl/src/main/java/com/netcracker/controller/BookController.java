@@ -2,14 +2,17 @@ package com.netcracker.controller;
 
 import com.netcracker.model.Book;
 import com.netcracker.service.BookService;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -18,13 +21,13 @@ import java.io.*;
 public class BookController {
 
     private BookService bookService;
-
     private String name;
+    private String hashCode;
     @Value("${root.path}")
     private String rootPath;
 
     @Autowired
-    ServletContext context;
+    private ServletContext context;
 
     @Autowired
     @Qualifier(value = "bookService")
@@ -32,9 +35,10 @@ public class BookController {
         this.bookService = bookService;
     }
 
-    @RequestMapping(value = "books", method = RequestMethod.GET)
+    @RequestMapping(value = "/books", method = RequestMethod.GET)
     public String listBooks(Model model) {
         model.addAttribute("book", new Book());
+        System.out.println("asdfadfacfsad");
         model.addAttribute("listBooks", this.bookService.listBooks());
         return "books";
     }
@@ -58,39 +62,43 @@ public class BookController {
         return "edit";
     }
 
-    @RequestMapping("/bookdata/{id}")
-    public String bookDate(@PathVariable("id") int id, Model model) {
-        model.addAttribute("book", this.bookService.getBookById(id));
-        return "bookdata";
-    }
-
     @RequestMapping("/search")
-    public String getDateByName(@RequestParam("bookTitle") String bookTitle, Model model) {
+    public String getDataByName(@RequestParam("bookTitle") String bookTitle, Model model) {
         model.addAttribute("book", new Book());
         model.addAttribute("listBooks", this.bookService.getBookByName(bookTitle));
         return "books";
     }
 
     @RequestMapping(value = "add", method = RequestMethod.GET)
-    public String ks(Model model) {
+    public String add(Model model) {
         model.addAttribute("book", new Book());
         return "add";
     }
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public /*@ResponseBody*/ String fileUpload(@ModelAttribute("book") Book book,
-                                               @RequestParam("file") MultipartFile file) throws IOException {
+    public String fileUpload(@ModelAttribute("book") Book book,
+                             @RequestParam("file") MultipartFile file) throws IOException {
         if (!file.isEmpty()) {
-            int hashCode = book.hashCode();
-            name = hashCode + file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
-            book.setMimeType(context.getMimeType(name));
-            book.setLink(rootPath + name);
-            book.setHash(hashCode);
-            this.bookService.addBook(book);
-            byte[] bytes = file.getBytes();
-            BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new File(rootPath + name)));
-            stream.write(bytes);
-            stream.close();
+            try (InputStream inputStream = file.getInputStream()) {
+                hashCode = DigestUtils.md5Hex(inputStream);
+                name = hashCode + file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+                book.setMimeType(context.getMimeType(name));
+                book.setLink(rootPath + name);
+                book.setHash(hashCode);
+                book.setLogin(SecurityContextHolder.getContext().getAuthentication().getName());
+                this.bookService.addBook(book);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "redirect:/books";
+            }
+
+            try {
+                BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new File(rootPath + name)));
+                stream.write(file.getBytes());
+                stream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return "redirect:/books";
 
         } else {
@@ -98,22 +106,25 @@ public class BookController {
         }
     }
 
-    @RequestMapping(value = "/download/{hash}", method = RequestMethod.GET)
-    public void downloadFile(@PathVariable("hash") int hash,
-                             HttpServletResponse response) throws Throwable {
-
-        Book book = bookService.getBookByHash(hash);
+    @RequestMapping(value = "/download/{id_book}", method = RequestMethod.GET)
+    public String downloadFile(@PathVariable("id_book") int id,
+                               HttpServletResponse response) throws Throwable {
+        Book book = bookService.getBookById(id);
+        if (book == null) {
+            return "redirect:/books";
+        }
         File file = new File(book.getLink());
-        FileInputStream inputStream;
-        OutputStream outStream;
-        inputStream = new FileInputStream(file);
-        response.setContentType(book.getMimeType());
-        response.addHeader("Content-Disposition",
-                "inline; filename=\"" + book.getBookTitle() + file.getName().substring(file.getName().lastIndexOf(".")) + "\"");
-        response.setContentLength((int) file.length());
-        response.getOutputStream();
-        outStream = response.getOutputStream();
-        IOUtils.copy(inputStream, outStream);
-        response.flushBuffer();
+        try (OutputStream outStream = response.getOutputStream(); FileInputStream inputStream = new FileInputStream(file)) {
+            response.setContentType(book.getMimeType());
+            response.addHeader("Content-Disposition",
+                    "inline; filename=\"" + book.getBookTitle() + file.getName().substring(file.getName().lastIndexOf(".")) + "\"");
+            response.setContentLength((int) file.length());
+            response.getOutputStream();
+            IOUtils.copy(inputStream, outStream);
+            response.flushBuffer();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "redirect:/books";
     }
 }

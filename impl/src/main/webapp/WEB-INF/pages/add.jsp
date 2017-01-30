@@ -9,14 +9,18 @@
     <script language="JavaScript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
     <script>
         function check() {
-            if (($('#file').val() != '') && ($('#bookTitle').val() != '') && ($('#author').val() != '') && ($('#year').val() != ''))
-                $('#button').removeAttr('disabled');
-            else
-                $('#button').attr('disabled', 'disable');
+            if (($('#file').val() != '') && ($('#bookTitle').val() != '') && ($('#author').val() != '') && ($('#year').val() != '')) {
+                $('#private').removeAttr('disabled');
+                $('#public').removeAttr('disabled');
+            }
+            else {
+                $('#private').attr('disabled', 'disable');
+                $('#public').attr('disabled', 'disable');
+            }
         }
     </script>
-    <h1>Add a Book</h1>
 </head>
+<h1>Add a Book</h1>
 <body>
 <c:url var="addAction" value="/upload"/>
 
@@ -59,8 +63,16 @@
                 File to upload: <input type="file" onchange="check();" id="file"
                                        accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                                        name="file">
-                <p><input type="submit" id="button" disabled="disabled"
-                          value="<spring:message text="Add Book"/>"/></p>
+                <p>
+                    <select id="bookType" name="bookType">
+                        <option value="public">Public book</option>
+                        <option value="private">Private book</option>
+                    </select>
+                </p>
+                <p>
+                    <input type="submit" id="private" disabled="disabled"
+                           value="<spring:message text="Add book"/>"/>
+                </p>
             </form>
         </td>
     </tr>

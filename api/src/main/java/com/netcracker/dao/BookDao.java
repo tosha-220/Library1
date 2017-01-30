@@ -1,8 +1,6 @@
 package com.netcracker.dao;
 
-
 import com.netcracker.model.Book;
-
 import java.util.List;
 
 public interface BookDao {
@@ -13,8 +11,6 @@ public interface BookDao {
     void deleteBook(int id);
 
     Book getBookById(int id);
-
-    Book getBookByHash(int hash);
 
     List<Book> listBooks();
 

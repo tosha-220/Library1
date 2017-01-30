@@ -5,13 +5,8 @@
 <%@ page session="false" %>
 <html>
 <title>Books Page</title>
-
-
 <h1>Edit a Book</h1>
-
-
 <c:url var="edit" value="/update"/>
-
 <form:form action="${edit}" commandName="book">
     <table>
         <tr>
@@ -75,5 +70,4 @@
         </tr>
     </table>
 </form:form>
-</body>
 </html>

@@ -8,9 +8,15 @@
 
     <context:component-scan base-package="com.netcracker"/>
     <context:property-placeholder location="classpath*:app.properties"/>
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <import resource="security3.xml"/>
+
+    <mvc:default-servlet-handler/>
+    <mvc:annotation-driven/>
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="prefix" value="/WEB-INF/pages/"/>
+        <property name="prefix" value="WEB-INF/pages/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
 
@@ -29,8 +35,6 @@
         <property name="maxUploadSize" value="100000000000"/>
 
     </bean>
-
-
     <!-- Hibernate 4 SessionFactory Bean definition -->
     <bean id="hibernate4AnnotatedSessionFactory"
           class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
@@ -38,6 +42,8 @@
         <property name="annotatedClasses">
             <list>
                 <value>com.netcracker.model.Book</value>
+                <value>com.netcracker.model.User</value>
+                <value>com.netcracker.model.Roles</value>
             </list>
         </property>
         <property name="hibernateProperties">
@@ -56,15 +62,25 @@
 
     <bean id="bookService" class="com.netcracker.service.BookServiceImpl">
         <property name="bookDao" ref="bookDao"/>
+
+    </bean>
+    <bean id="userDao" class="com.netcracker.dao.UserDaoImpl">
+        <property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory"/>
     </bean>
 
-    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <bean id="userService" class="com.netcracker.service.UserServiceImpl">
+        <property name="userDao" ref="userDao"/>
+    </bean>
+
+    <bean id="roleDao" class="com.netcracker.dao.RoleDaoImpl">
+        <property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory"/>
+    </bean>
+
+    <bean id="roleService" class="com.netcracker.service.RoleServiceImpl">
+        <property name="roleDao" ref="roleDao"/>
+    </bean>
 
     <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
         <property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory"/>
     </bean>
-
-    <mvc:default-servlet-handler/>
-    <mvc:annotation-driven/>
-
 </beans>

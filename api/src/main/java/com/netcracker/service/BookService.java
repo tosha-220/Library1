@@ -17,5 +17,4 @@ public interface BookService {
 
     List<Book> getBookByName(String name);
 
-    Book getBookByHash(int hash);
 }

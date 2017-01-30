@@ -4,7 +4,6 @@ import com.netcracker.dao.BookDao;
 import com.netcracker.model.Book;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 
@@ -52,9 +51,9 @@ public class BookServiceImpl implements BookService {
         return this.bookDao.getBookByTitle(name);
     }
 
-    @Transactional
-    @Override
-    public Book getBookByHash(int hash) {
-        return this.bookDao.getBookByHash(hash);
-    }
+//    @Transactional
+//    @Override
+//    public Book getBookByHash(String hash, int id) {
+//        return this.bookDao.getBookByHash(hash,id);
+//    }
 }

@@ -22,10 +22,38 @@ public class Book {
     private String link;
 
     @Column(name = "hash")
-    private int hash;
+    private String hash;
 
     @Column(name = "mimeType")
     private String mimeType;
+
+
+    @Column(name = "login")
+    private String login;
+
+    @Column(name = "book_type")
+    private String bookType;
+
+//    @ManyToOne
+//    @JoinColumn(name = "login", referencedColumnName = "login",
+//            insertable = false, updatable = false)
+//    private User user;
+
+    public String getBookType() {
+        return bookType;
+    }
+
+    public void setBookType(String bookType) {
+        this.bookType = bookType;
+    }
+
+//    public User getUser() {
+//        return user;
+//    }
+//
+//    public void setUser(User user) {
+//        this.user = user;
+//    }
 
     public int getBookID() {
         return bookID;
@@ -67,11 +95,11 @@ public class Book {
         this.link = link;
     }
 
-    public int getHash() {
+    public String getHash() {
         return hash;
     }
 
-    public void setHash(int hash) {
+    public void setHash(String hash) {
         this.hash = hash;
     }
 
@@ -83,6 +111,14 @@ public class Book {
         this.mimeType = mimeType;
     }
 
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
     @Override
     public String toString() {
         return "Book{" +
@@ -91,8 +127,9 @@ public class Book {
                 ", author='" + author + '\'' +
                 ", year=" + year +
                 ", link='" + link + '\'' +
-                ", hash=" + hash +
+                ", hash='" + hash + '\'' +
                 ", mimeType='" + mimeType + '\'' +
+                ", login='" + login + '\'' +
                 '}';
     }
 }
